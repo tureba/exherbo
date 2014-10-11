@@ -1,0 +1,14 @@
+# Copyright 2014 Arthur Nascimento <tureba@gmail.com>
+# Distributed under the terms of the GNU General Public License v2
+
+require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.13 ] ] github [ tag="REL_$(ever replace_all _ ${PV})" ]
+
+SUMMARY="log4cplus is a simple to use C++ logging API"
+HOMEPAGE="http://sourceforge.net/projects/log4cplus/"
+SLOT="0"
+LICENCES="Apache-2.0 BSD"
+DEPENDENCIES="
+    build:
+        virtual/pkg-config
+"
+
