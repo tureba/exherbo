@@ -1,0 +1,34 @@
+# Copyright 2014 Arthur Nascimento <tureba@gmail.com>
+# Distributed under the terms of the GNU General Public License v2
+
+export_exlib_phases src_test
+
+require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.13 ] ] github [ user=ClusterLabs tag="v${PV}" ]
+
+SUMMARY="libqb is a library providing high performance logging, tracing, ipc, and poll"
+HOMEPAGE="http://clusterlabs.github.io/libqb/"
+LICENCES="LGPL-2.1"
+SLOT="0"
+MYOPTIONS=""
+
+DEPENDENCIES="
+    build:
+        virtual/pkg-config
+    test:
+        dev-libs/check
+"
+
+DEFAULT_SRC_CONFIGURE_PARAMS+=( --with-socket-dir=/run )
+
+libqb_src_test() {
+    # should be unix:/dev/log, but on systemd it is a symlink and allow_net doesn't follow symlinks
+    esandbox allow_net --connect "unix:/run/systemd/journal/dev-log"
+    esandbox allow_net "unix-abstract:*test*"
+    esandbox allow_net --connect "unix-abstract:*test*"
+
+    default
+
+    esandbox disallow_net --connect "unix:/run/systemd/journal/dev-log"
+    esandbox disallow_net "unix-abstract:*test*"
+    esandbox disallow_net --connect "unix-abstract:*test*"
+}
